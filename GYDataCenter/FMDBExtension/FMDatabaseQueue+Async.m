@@ -13,15 +13,19 @@ static const void * const kDatabaseQueueSpecificKey = &kDatabaseQueueSpecificKey
 @implementation FMDatabaseQueue (Async)
 
 - (dispatch_queue_t)queue {
-    return _queue;
+    return [self valueForKey:@"_queue"];
+}
+
+- (FMDatabase *) theDB {
+    return [self valueForKey:@"_db"];
 }
 
 - (void)setShouldCacheStatements:(BOOL)value {
-    [_db setShouldCacheStatements:value];
+    [[self theDB] setShouldCacheStatements:value];
 }
 
 - (void)setDatabaseQueueSpecific {
-    dispatch_queue_set_specific(_queue, kDatabaseQueueSpecificKey, (__bridge void *)self, NULL);
+    dispatch_queue_set_specific([self queue], kDatabaseQueueSpecificKey, (__bridge void *)self, NULL);
 }
 
 - (void)syncInDatabase:(void (^)(FMDatabase *db))block {
@@ -50,7 +54,7 @@ static const void * const kDatabaseQueueSpecificKey = &kDatabaseQueueSpecificKey
     if (currentSyncQueue == self) {
         task();
     } else {
-        dispatch_sync(_queue, task);
+        dispatch_sync([self queue], task);
     }
     
     FMDBRelease(self);
@@ -82,30 +86,31 @@ static const void * const kDatabaseQueueSpecificKey = &kDatabaseQueueSpecificKey
     if (currentSyncQueue == self) {
         task();
     } else {
-        dispatch_async(_queue, task);
+        dispatch_async([self queue], task);
     }
     
     FMDBRelease(self);
 }
 
 - (FMDatabase*)database {
-    if (!_db) {
-        _db = FMDBReturnRetained([FMDatabase databaseWithPath:_path]);
+    FMDatabase *db = [self theDB];
+    if (!db) {
+        db = FMDBReturnRetained([FMDatabase databaseWithPath:self.path]);
         
 #if SQLITE_VERSION_NUMBER >= 3005000
-        BOOL success = [_db openWithFlags:_openFlags];
+        BOOL success = [db openWithFlags:self.openFlags];
 #else
-        BOOL success = [_db open];
+        BOOL success = [db open];
 #endif
         if (!success) {
-            NSLog(@"FMDatabaseQueue could not reopen database for path %@", _path);
-            FMDBRelease(_db);
-            _db  = 0x00;
+            NSLog(@"FMDatabaseQueue could not reopen database for path %@", self.path);
+            FMDBRelease(db);
+            db  = 0x00;
             return 0x00;
         }
     }
     
-    return _db;
+    return db;
 }
 
 @end

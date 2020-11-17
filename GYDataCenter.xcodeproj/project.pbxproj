@@ -142,11 +142,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B32703781D1CE36600B1B0A4 /* Build configuration list for PBXNativeTarget "GYDataCenter" */;
 			buildPhases = (
+				1D4D2853B0A5EB4FC5213568 /* [CP] Check Pods Manifest.lock */,
 				8559EE63FC20CB89027EA190 /* 📦 Check Pods Manifest.lock */,
 				B327036B1D1CE36600B1B0A4 /* Sources */,
 				B327036C1D1CE36600B1B0A4 /* Frameworks */,
 				B327036D1D1CE36600B1B0A4 /* CopyFiles */,
-				100B6EB6A6FB46D637C29C03 /* 📦 Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -189,19 +189,26 @@
 /* End PBXProject section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		100B6EB6A6FB46D637C29C03 /* 📦 Copy Pods Resources */ = {
+		1D4D2853B0A5EB4FC5213568 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputPaths = (
+			inputFileListPaths = (
 			);
-			name = "📦 Copy Pods Resources";
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
 			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-GYDataCenter-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GYDataCenter/Pods-GYDataCenter-resources.sh\"\n";
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8559EE63FC20CB89027EA190 /* 📦 Check Pods Manifest.lock */ = {
