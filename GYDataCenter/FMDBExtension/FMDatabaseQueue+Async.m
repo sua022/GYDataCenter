@@ -7,6 +7,7 @@
 //
 
 #import "FMDatabaseQueue+Async.h"
+#import <objc/runtime.h>
 
 static const void * const kDatabaseQueueSpecificKey = &kDatabaseQueueSpecificKey;
 
