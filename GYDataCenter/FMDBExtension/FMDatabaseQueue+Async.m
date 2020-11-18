@@ -13,7 +13,8 @@ static const void * const kDatabaseQueueSpecificKey = &kDatabaseQueueSpecificKey
 @implementation FMDatabaseQueue (Async)
 
 - (dispatch_queue_t)queue {
-    return [self valueForKey:@"_queue"];
+    Ivar ivar = class_getInstanceVariable([self class], [@"_queue" UTF8String]);
+    return object_getIvar(self, ivar);
 }
 
 - (FMDatabase *) theDB {
